@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import {
     Box,
     Typography,
@@ -14,7 +14,6 @@ import {
     Snackbar,
     Alert
 } from '@mui/material';
-import { FormContainer, TextFieldElement } from 'react-hook-form-mui'
 import { deleteIcon } from '../../assets/icon';
 
 function MainContext() {
@@ -28,12 +27,13 @@ function MainContext() {
         todoDescription: string;
     }
 
-    // Local State
+    // Local State3
+    const [todoTitle, setTodoTitle] = useState<todoTitleInputData | String>("");
     const [todoList, setTodoList] = useState<todoListData[] | {} | any>([]);
     const [alertMessage, setAlertMessage] = useState<boolean>(false);
 
     // Form Object Value
-    const formValue: todoTitleInputData = { todoTitle: "" };
+    // const formValue: todoTitleInputData = { todoTitle: "" };
 
     // Remove Todo from Todo List
     const removeTodo = (index: number): any => {
@@ -67,7 +67,8 @@ function MainContext() {
                                         <Typography
                                             sx={{
                                                 fontSize: 30,
-                                                fontWeight: 600
+                                                fontWeight: 600,
+                                                textTransform: "capitalize"
                                             }}
                                             color='primary'
                                             variant="h1"
@@ -89,30 +90,63 @@ function MainContext() {
                                 </Box>
                             </CardContent>
                             <CardContent>
-                                <Box>
-                                    <TextField
-                                        fullWidth={true}
-                                        id="outlined-multiline-flexible"
-                                        label="Todo Description"
-                                        multiline
-                                        maxRows={4}
-                                    />
+                                <Box sx={{
+                                    display: "flex",
+                                    flexDirection: 'row',
+                                }}>
+                                    <Box sx={{
+                                        flex: 1,
+                                        pr: 1
+                                    }}>
+                                        <TextField
+                                            fullWidth={true}
+                                            id="outlined-multiline-flexible"
+                                            label="Todo Description"
+                                            size="small"
+                                            multiline
+                                            maxRows={4}
+                                        />
+                                    </Box>
+                                    <Box>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                        >
+                                            <Box>
+                                                ADD
+                                            </Box>
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </CardContent>
-                            <CardActions>
+                            <CardActions
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    alignItems: "center",
+                                }}
+                            >
                                 <Button
                                     type="submit"
                                     variant="outlined"
                                     size="small"
                                 >
-                                    <Box sx={{ pr: 1 }}>
-                                        Add New Todo
-                                    </Box>
+                                    {/* <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+
+                                    </Box> */}
                                     <Box>
-                                        <svg width={15} height={15} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                                        </svg>
+                                        Done
                                     </Box>
+                                    {/* <Box>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width={11} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </Box> */}
                                 </Button>
                             </CardActions>
                         </Card>
@@ -122,12 +156,13 @@ function MainContext() {
         )
     }
 
-    const addNewTodoListAction = (data: todoTitleInputData): void => {
-        const { todoTitle } = data;
+    const addNewTodoListAction = (e: FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
 
         if (typeof todoTitle === "string" && todoTitle !== "") {
             const list: todoListData[] = [...todoList, { todoTitle: todoTitle, todoDescription: "" }];
-            return setTodoList(list)
+            setTodoList(list);
+            return setTodoTitle("");
         }
 
         return setAlertMessage(true);
@@ -156,23 +191,16 @@ function MainContext() {
                     </Typography>
                 </Box>
                 <Box>
-                    <FormContainer
-                        defaultValues={formValue}
- 
-                        onSuccess={
-                            data => {
-                                addNewTodoListAction(data)
-                                console.log(`~ formValue`, formValue)
-                                return data.todoTitle = "";
-                            }
-                        }
-                    >
+                    <form onSubmit={addNewTodoListAction}>
                         <Box sx={{ display: "flex", flexDirection: 'row', boxShadow: 0 }}>
                             <Box sx={{ width: "100%" }}>
                                 <FormControl fullWidth >
-                                    <TextFieldElement
+                                    <TextField
+                                        fullWidth={true}
                                         name="todoTitle"
                                         label="Todo Name exp: Buy Milk, Buy Eggs"
+                                        value={todoTitle}
+                                        onChange={(e) => setTodoTitle(e.target.value)}
                                     />
                                 </FormControl>
                             </Box>
@@ -203,7 +231,7 @@ function MainContext() {
                                 </Button>
                             </Box>
                         </Box>
-                    </FormContainer>
+                    </form>
                 </Box>
                 <Box sx={{ py: 1, boxShadow: 0 }}>
                     <Box>

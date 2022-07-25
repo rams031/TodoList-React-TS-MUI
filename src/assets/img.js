@@ -1,0 +1,1 @@
+export const todoListLogo = "https://is4-ssl.mzstatic.com/image/thumb/Purple116/v4/bc/76/f1/bc76f19a-6c09-6583-d1f8-817f680de74e/source/512x512bb.jpg";

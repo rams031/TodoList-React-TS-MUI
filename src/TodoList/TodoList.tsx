@@ -58,7 +58,6 @@ const TodoList = () => {
                     </Paper>
                     {/* Side Bar */}
                     {/* <Sidebar /> */}
-                    <div>test</div>
                     {/* Main Content */}
                     <MainContext />
                 </Paper>
